@@ -1,0 +1,25 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "seroter-api-k8s", "seroter-api-k8s\seroter-api-k8s.csproj", "{FEEF3C4A-BDFD-469C-9FA4-AAD8218E2B6F}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{DEB6C3CA-41DB-4E8E-ADF2-8507878F4FFC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8A600248-31EC-46AB-B5B0-5A45CBB2D7D1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FEEF3C4A-BDFD-469C-9FA4-AAD8218E2B6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEEF3C4A-BDFD-469C-9FA4-AAD8218E2B6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEEF3C4A-BDFD-469C-9FA4-AAD8218E2B6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEEF3C4A-BDFD-469C-9FA4-AAD8218E2B6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEB6C3CA-41DB-4E8E-ADF2-8507878F4FFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEB6C3CA-41DB-4E8E-ADF2-8507878F4FFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEB6C3CA-41DB-4E8E-ADF2-8507878F4FFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEB6C3CA-41DB-4E8E-ADF2-8507878F4FFC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

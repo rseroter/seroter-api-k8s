@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  seroter-api-k8s:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"
