@@ -1,8 +1,0 @@
-version: '3.4'
-
-services:
-  seroter-api-k8s:
-    image: ${DOCKER_REGISTRY-}seroterapik8s
-    build:
-      context: .
-      dockerfile: seroter-api-k8s/Dockerfile
