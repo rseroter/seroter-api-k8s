@@ -15,4 +15,7 @@
   <ItemGroup>
     <None Remove="Dockerfile" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ci\" />
+  </ItemGroup>
 </Project>
