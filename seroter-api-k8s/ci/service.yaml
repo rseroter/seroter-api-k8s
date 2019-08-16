@@ -10,6 +10,7 @@ spec:
     app: demo-app
   type: LoadBalancer
   ports:
-    - protocol: web
+    - name: web
+      protocol: TCP
       port: 80
-      targetPort: 8080
+      targetPort: 80
