@@ -1,0 +1,50 @@
+---
+# declare resources
+resources:
+- name: source-code
+  type: git
+  icon: github-circle
+  source:
+    uri: https://github.com/rseroter/seroter-api-k8s
+    branch: master
+- name: azure-container-registry
+  type: docker-image
+  icon: docker
+  source:
+    repository: ((azure-registry-url))
+    tag: latest
+    username: ((azure-registry-username))
+    password: ((azure-registry-password))
+
+# list out jobs
+jobs:
+#first job runs unit tests
+- name: run-unit-tests
+  plan:
+  - get: source-code
+    trigger: true
+  - task: first-task
+    config: 
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: {repository: mcr.microsoft.com/dotnet/core/sdk}
+      inputs:
+      - name: source-code
+      run:
+          path: sh
+          args:
+          - -exec
+          - |
+            dotnet test ./source-code/seroter-api-k8s/seroter-api-k8s.csproj 
+#second job produces a container
+- name: containerize-app
+  plan:
+  - get: source-code
+    trigger: true
+    passed:
+    - run-unit-tests
+  - put: azure-container-registry
+    params:
+      build: ./source-code
+      tag_as_latest: true

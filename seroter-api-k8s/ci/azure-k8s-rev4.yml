@@ -1,0 +1,107 @@
+---
+# declare resource types
+resource_types:
+- name: azure-blobstore
+  type: docker-image
+  source:
+    repository: pcfabr/azure-blobstore-resource
+
+# declare resources
+resources:
+- name: source-code
+  type: git
+  icon: github-circle
+  source:
+    uri: https://github.com/rseroter/seroter-api-k8s
+    branch: master
+- name: azure-container-registry
+  type: docker-image
+  icon: docker
+  source:
+    repository: ((azure-registry-url))
+    tag: latest
+    username: ((azure-registry-username))
+    password: ((azure-registry-password))
+- name: azure-blobstore
+  type: azure-blobstore
+  icon: azure
+  source:
+    storage_account_name: ((azure-storage-account-name))
+    storage_account_key: ((azure-storage-account-key))
+    container: coreapp
+    versioned_file: app.tar.gz
+- name: version  
+  type: semver
+  source:
+    driver: git
+    uri: git@github.com:rseroter/seroter-api-k8s.git
+    branch: version
+    file: version
+    private_key: ((github-private-key))
+
+# list out jobs
+jobs:
+# first job runs unit tests
+- name: run-unit-tests
+  plan:
+  - get: source-code
+    trigger: true
+  - task: first-task
+    config: 
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: {repository: mcr.microsoft.com/dotnet/core/sdk}
+      inputs:
+      - name: source-code
+      run:
+          path: sh
+          args:
+          - -exec
+          - |
+            dotnet test ./source-code/seroter-api-k8s/seroter-api-k8s.csproj 
+# second job produces a container
+- name: containerize-app
+  plan:
+  - get: source-code
+    trigger: true
+    passed:
+    - run-unit-tests
+  - get: version
+    params: {bump: minor}
+  - put: azure-container-registry
+    params:
+      build: ./source-code
+      tag_file: version/version
+      tag_as_latest: true
+  - put: version
+    params: {file: version/version}
+# third job bundles code and uploads it
+- name: package-app
+  plan:
+  - get: source-code
+    trigger: true
+    passed:
+    - run-unit-tests
+  - task: first-task
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: {repository: mcr.microsoft.com/dotnet/core/sdk}
+      inputs:
+      - name: source-code
+      outputs:
+      - name: compiled-app
+      - name: artifact-repo
+      run:
+          path: sh
+          args:
+          - -exec
+          - |
+            dotnet publish ./source-code/seroter-api-k8s/seroter-api-k8s.csproj -o .././compiled-app
+            tar -czvf ./artifact-repo/app.tar.gz ./compiled-app
+            ls
+  - put: azure-blobstore
+    params:
+      file: artifact-repo/app.tar.gz
